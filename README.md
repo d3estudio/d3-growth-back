@@ -6,7 +6,7 @@ the target is to build an awesome tool that can help the growth process.
 
 this api is being built with these technologies:
 
-- node 12.8.0
+- node 12.10.0
 - docker
 
 ## roadmap
@@ -16,3 +16,7 @@ this api is being built with these technologies:
 - [ ] classify with a theme, category, and epic
 - [ ] provide an api to serve front-end (bff)
 - [ ] improve the classification system (and repeat, and repeat, ...)
+
+## how to run this project?
+
+first of all, you need to have installed docker and just run `docker-compose up`
