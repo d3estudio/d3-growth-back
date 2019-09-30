@@ -19,4 +19,10 @@ this api is being built with these technologies:
 
 ## how to run this project?
 
-first of all, you need to have installed docker and just run `docker-compose up`
+1. duplicate the `.env.sample` file located on the root path and name it as `.env`
+2. check if you already have installed docker
+3. run `docker-compose up` command
+
+## development and tests
+
+to run tests, just execute this following command on the root path `yarn test`
