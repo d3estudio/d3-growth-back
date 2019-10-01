@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "start": "node index.js",
-    "dev": "DEBUG=d3-growth:* PORT=3000 nodemon index.js",
+    "dev": "DEBUG=d3-growth:* API_PORT=3000 TOKEN_SECRET=quetetoucha nodemon index.js",
     "test": "mocha 'tests/**/*.test.js'"
   },
   "devDependencies": {
@@ -34,6 +34,8 @@
   },
   "dependencies": {
     "body-parser": "^1.19.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "passport": "^0.4.0",
+    "passport-http-bearer": "^1.0.1"
   }
 }
