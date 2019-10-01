@@ -6,9 +6,6 @@ const chai = require('chai'),
 const mocha = require('mocha'),
   describe = mocha.describe
 
-const sinon = require('sinon'),
-  sandbox = sinon.createSandbox()
-
 const answerService = require('../../app/services/answer')
 const keywordsData = require('../../app/utils/keywords.json')
 
@@ -59,27 +56,13 @@ describe('AnswerService', () => {
       })
 
       describe('and the value exists in json', () => {
-        const { categorias, epicos, temas } = keywordsData
+        const { categorias } = keywordsData
 
         it('should return correct array length for categories', () => {
           answerService
             .keywordsEntries('categorias')
             .should.be.a('array')
             .with.lengthOf(Object.entries(categorias).length)
-        })
-
-        it('should return correct array length for epics', () => {
-          answerService
-            .keywordsEntries('epicos')
-            .should.be.a('array')
-            .with.lengthOf(Object.entries(epicos).length)
-        })
-
-        it('should return correct array length for themes', () => {
-          answerService
-            .keywordsEntries('temas')
-            .should.be.a('array')
-            .with.lengthOf(Object.entries(temas).length)
         })
       })
     })
@@ -95,7 +78,7 @@ describe('AnswerService', () => {
     describe('when the params are present', () => {
       describe('and value don`t matches', () => {
         it('should return zero', () => {
-          assert.equal(answerService.testAnswer('value matches', 'xyz'), 0)
+          assert.equal(answerService.testAnswer('value', 'xyz'), 0)
         })
       })
 
@@ -145,16 +128,6 @@ describe('AnswerService', () => {
         const keys = Object.keys(keywordsData.categorias)
         expect(answerService.checkStepKeywords('', 'categorias')).to.have.all.keys(keys)
       })
-
-      it('should have correct entries for epics', () => {
-        const keys = Object.keys(keywordsData.epicos)
-        expect(answerService.checkStepKeywords('', 'epicos')).to.have.all.keys(keys)
-      })
-
-      it('should have correct entries for themes', () => {
-        const keys = Object.keys(keywordsData.temas)
-        expect(answerService.checkStepKeywords('', 'temas')).to.have.all.keys(keys)
-      })
     })
   })
 
@@ -187,38 +160,14 @@ describe('AnswerService', () => {
 
     describe('when the params are present', () => {
       describe('and the step is categories', () => {
-        it('should return funcionalidade', () => {
-          const answer = keywordsData.categorias.funcionalidade.toString()
-          assert.equal(answerService.classifyStep(answer, 'categorias'), 'funcionalidade')
-        })
-
-        it('should return conteudo', () => {
-          const answer = keywordsData.categorias.conteudo.toString()
-          assert.equal(answerService.classifyStep(answer, 'categorias'), 'conteudo')
-        })
-      })
-
-      describe('and the step is epics', () => {
-        it('should return boletos', () => {
-          const answer = keywordsData.epicos.boletos.toString()
-          assert.equal(answerService.classifyStep(answer, 'epicos'), 'boletos')
-        })
-
-        it('should return extrato', () => {
-          const answer = keywordsData.epicos.extrato.toString()
-          assert.equal(answerService.classifyStep(answer, 'epicos'), 'extrato')
-        })
-      })
-
-      describe('and the step is themes', () => {
         it('should return a-mrv', () => {
-          const answer = keywordsData.temas['a-mrv'].toString()
-          assert.equal(answerService.classifyStep(answer, 'temas'), 'a-mrv')
+          const answer = keywordsData.categorias['a-mrv'].toString()
+          assert.equal(answerService.classifyStep(answer, 'categorias'), 'a-mrv')
         })
 
         it('should return usabilidade', () => {
-          const answer = keywordsData.temas.usabilidade.toString()
-          assert.equal(answerService.classifyStep(answer, 'temas'), 'usabilidade')
+          const answer = keywordsData.categorias.usabilidade.toString()
+          assert.equal(answerService.classifyStep(answer, 'categorias'), 'usabilidade')
         })
       })
     })
@@ -233,7 +182,7 @@ describe('AnswerService', () => {
 
     describe('when the param is present', () => {
       it('should have correct entries for epics', () => {
-        const keys = ['answer', 'theme', 'epic', 'category']
+        const keys = ['answer', 'category']
         expect(answerService.classify('xyz')).to.have.all.keys(keys)
       })
     })

@@ -69,8 +69,6 @@ module.exports = {
 
     return {
       answer,
-      theme: this.classifyStep(answer, 'temas'),
-      epic: this.classifyStep(answer, 'epicos'),
       category: this.classifyStep(answer, 'categorias')
     }
   },

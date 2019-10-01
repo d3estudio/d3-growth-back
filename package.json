@@ -8,7 +8,7 @@
   "private": true,
   "scripts": {
     "start": "node index.js",
-    "dev": "DEBUG=d3-growth:* nodemon index.js",
+    "dev": "DEBUG=d3-growth:* PORT=3000 nodemon index.js",
     "test": "mocha 'tests/**/*.test.js'"
   },
   "devDependencies": {
