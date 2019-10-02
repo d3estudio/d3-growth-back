@@ -6,4 +6,4 @@ RUN npm install
 COPY . .
 COPY --chown=node:node . .
 USER node
-CMD ["node", "index.js"]
+CMD ["node", "server.js"]
