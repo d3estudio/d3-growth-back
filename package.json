@@ -9,10 +9,11 @@
   "scripts": {
     "start": "node index.js",
     "dev": "DEBUG=d3-growth:* API_PORT=3000 TOKEN_SECRET=quetetoucha nodemon index.js",
-    "test": "mocha 'tests/**/*.test.js'"
+    "test": "mocha --timeout 2000 --exit 'tests/**/*.test.js'"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
     "husky": "^3.0.5",
     "mocha": "^6.2.0",
     "prettier": "1.18.2",

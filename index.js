@@ -9,9 +9,10 @@ const port = process.env.API_PORT
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
-
 app.use(passport.initialize())
 
 app.use(router)
 
 app.listen(port, () => console.log(`listening on port ${port}`))
+
+module.exports = app

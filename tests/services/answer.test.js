@@ -40,7 +40,7 @@ describe('AnswerService', () => {
       it('should return an empty array', () => {
         answerService
           .keywordsEntries('')
-          .should.be.a('array')
+          .should.be.an('array')
           .with.lengthOf(0)
       })
     })
@@ -50,7 +50,7 @@ describe('AnswerService', () => {
         it('should return an empty array', () => {
           answerService
             .keywordsEntries('xyz')
-            .should.be.a('array')
+            .should.be.an('array')
             .with.lengthOf(0)
         })
       })
@@ -61,7 +61,7 @@ describe('AnswerService', () => {
         it('should return correct array length for categories', () => {
           answerService
             .keywordsEntries('categorias')
-            .should.be.a('array')
+            .should.be.an('array')
             .with.lengthOf(Object.entries(categorias).length)
         })
       })
@@ -193,7 +193,7 @@ describe('AnswerService', () => {
       it('should return an empty array', () => {
         answerService
           .classifyAll(null)
-          .should.be.a('array')
+          .should.be.an('array')
           .with.lengthOf(0)
       })
     })
