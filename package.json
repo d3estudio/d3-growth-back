@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "PORT=3000 SECRET='t0ken$ecret' USER=user PASSWORD=qwerty123 nodemon server.js",
-    "test": "mocha --timeout 2000 --exit 'tests/**/*.test.js'"
+    "test": "SECRET='--' USER=user PASSWORD=123 mocha --timeout 2000 --exit 'tests/**/*.test.js'"
   },
   "devDependencies": {
     "chai": "^4.2.0",

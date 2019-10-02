@@ -1,11 +1,11 @@
 const passport = require('passport')
 const BearerStrategy = require('passport-http-bearer')
 
-const secret = process.env.TOKEN_SECRET
+const SECRET = process.env.SECRET
 
 passport.use(
   new BearerStrategy((token, done) => {
-    if (token === secret) {
+    if (token === SECRET) {
       return done(null, { user: 'ok' })
     }
 

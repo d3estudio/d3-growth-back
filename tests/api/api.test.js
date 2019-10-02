@@ -8,7 +8,13 @@ const server = require('../../server')
 
 chai.use(chaiHttp)
 
-describe('Server', () => {
+describe('API', () => {
+  describe('express instance', () => {
+    it('should be a function', () => {
+      server.should.be.a('function')
+    })
+  })
+
   describe('get /version', () => {
     it('must return 200 with an object with version', done => {
       chai
