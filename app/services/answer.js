@@ -62,18 +62,30 @@ module.exports = {
     return this.mostCompatible(summary)
   },
 
+  classifyType(nps) {
+    if (!nps) {
+      return null
+    }
+
+    switch (true) {
+      case nps >= 9:
+        return 'promoter'
+      case nps >= 7 && nps < 9:
+        return 'neutral'
+      default:
+        return 'detractor'
+    }
+  },
+
   classify(answer) {
-    if (!answer) {
+    if (!answer['comment']) {
       return {}
     }
 
     return {
-      answer,
-      category: this.classifyStep(answer, 'categorias')
+      ...answer,
+      category: this.classifyStep(answer['comment'], 'categorias'),
+      type: this.classifyType(parseInt(answer['nps']))
     }
-  },
-
-  classifyAll(answers) {
-    return (answers || []).map(answer => this.classify(answer))
   }
 }

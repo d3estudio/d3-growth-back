@@ -9,7 +9,7 @@ const mocha = require('mocha'),
 const answerService = require('../../app/services/answer')
 const keywordsData = require('../../app/utils/keywords.json')
 
-describe('AnswerService', () => {
+describe('app/services/answer', () => {
   describe('normalizeAnswerString(answer)', () => {
     describe('when the param is not present', () => {
       it('should return an empty string', () => {
@@ -173,35 +173,41 @@ describe('AnswerService', () => {
     })
   })
 
+  describe('classifyType(nps)', () => {
+    describe('when the params are not present', () => {
+      it('should return null', () => {
+        assert.equal(answerService.classifyType(null), null)
+      })
+    })
+
+    describe('when the params are present', () => {
+      it('should return promoter', () => {
+        assert.equal(answerService.classifyType(10), 'promoter')
+        assert.equal(answerService.classifyType(9), 'promoter')
+      })
+
+      it('should return neutral', () => {
+        assert.equal(answerService.classifyType(8), 'neutral')
+        assert.equal(answerService.classifyType(7), 'neutral')
+      })
+
+      it('should return detractor', () => {
+        assert.equal(answerService.classifyType(6), 'detractor')
+      })
+    })
+  })
+
   describe(' classify(answer)', () => {
-    describe('when the param is not present', () => {
+    describe('when the param comment is not present', () => {
       it('should return an empty object', () => {
-        expect(answerService.classify('')).to.be.empty
+        expect(answerService.classify({ a: 1, b: 2 })).to.be.empty
       })
     })
 
     describe('when the param is present', () => {
       it('should have correct entries for epics', () => {
-        const keys = ['answer', 'category']
-        expect(answerService.classify('xyz')).to.have.all.keys(keys)
-      })
-    })
-  })
-
-  describe('classifyAll', () => {
-    describe('when the param is not present', () => {
-      it('should return an empty array', () => {
-        answerService
-          .classifyAll(null)
-          .should.be.an('array')
-          .with.lengthOf(0)
-      })
-    })
-
-    describe('when the param is present', () => {
-      it('should have classified answers', () => {
-        const keys = ['abc', 'xyz']
-        assert.lengthOf(answerService.classifyAll(keys), keys.length)
+        const keys = ['comment', 'category', 'type']
+        expect(answerService.classify({ comment: 'xyz' })).to.have.all.keys(keys)
       })
     })
   })
