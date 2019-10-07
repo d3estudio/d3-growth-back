@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const proxy = require('../../config/proxy')
 
 const headers = { Authorization: `Bearer ${process.env.TRACK_SALE_TOKEN}` }
@@ -30,12 +32,15 @@ module.exports = {
     return (answers || []).map(answer => this.parseAnswer(answer))
   },
 
-  retrieveAll() {
-    const uri = `${url}/report/answer?codes=21&limit=2`
+  answersUri(codes = '21', date = null) {
+    const startDate = moment(date || moment().subtract(1, 'day')).format('YYYY-MM-DD')
+    return `${url}/report/answer?codes=${codes}&start=${startDate}`
+  },
 
+  retrieveAll(codes, date) {
     return new Promise((resolve, reject) => {
       proxy(headers)
-        .get(uri)
+        .get(this.answersUri(codes, date))
         .then(res => {
           resolve(this.handleAnswers(res.data))
         })

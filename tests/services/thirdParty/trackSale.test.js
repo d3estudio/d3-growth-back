@@ -6,11 +6,13 @@ const chai = require('chai'),
 const mocha = require('mocha'),
   describe = mocha.describe
 
+const moment = require('moment')
 const nock = require('nock')
 
 const trackSaleService = require('../../../app/services/thirdParty/trackSale')
 const mock = require('./trackSale.mock')
 const url = 'https://api.tracksale.co/v2'
+const uriRegex = /\/report\/answer\?codes=(.*)\&start=(\d{4}-\d{2}-\d{2})/
 
 describe('app/services/thirdParty/trackSale', () => {
   describe('parseAnswer(answer)', () => {
@@ -31,7 +33,7 @@ describe('app/services/thirdParty/trackSale', () => {
   })
 
   describe('handleAnswers(answers)', () => {
-    describe('when te param is not present', () => {
+    describe('when the param is not present', () => {
       it('should return an empty array', () => {
         trackSaleService
           .handleAnswers(null)
@@ -48,12 +50,47 @@ describe('app/services/thirdParty/trackSale', () => {
     })
   })
 
-  describe('retrieveAll()', () => {
+  describe('answersUri(codes, date)', () => {
+    describe('when the params are not present', () => {
+      const [_, codes, start] = uriRegex.exec(trackSaleService.answersUri())
+
+      it('should return uri with param codes = 21', () => {
+        expect(codes).to.equals('21')
+      })
+
+      it('should return uri with yesterday as start param', () => {
+        expect(start).to.equals(
+          moment()
+            .subtract(1, 'day')
+            .format('YYYY-MM-DD')
+        )
+      })
+    })
+
+    describe('when the params are present', () => {
+      const inputCodes = '1,2,4,5,3'
+      const inputDate = moment()
+        .subtract(3, 'months')
+        .format('YYYY-MM-DD')
+
+      const [_, codes, start] = uriRegex.exec(trackSaleService.answersUri(inputCodes, inputDate))
+
+      it('should return correct codes', () => {
+        expect(codes).to.equals(inputCodes)
+      })
+
+      it('should return correct start', () => {
+        expect(start).to.equals(inputDate)
+      })
+    })
+  })
+
+  describe('retrieveAll(codes, date)', () => {
     const answers = mock.retrieveAll
 
     beforeEach(() => {
       nock(url)
-        .get('/report/answer?codes=21&limit=2')
+        .get(uriRegex)
         .reply(200, answers)
     })
 
