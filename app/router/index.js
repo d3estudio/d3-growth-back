@@ -1,8 +1,11 @@
+const cors = require('cors')
 const router = require('express').Router()
 
 const answersController = require('../controllers/answers')
 const auth = require('./auth')
 const passport = require('../config/passport')
+
+router.use(cors())
 
 router.use('/auth', auth)
 router.use('/version', (req, res) => res.send({ version: '1.0.0' }))
