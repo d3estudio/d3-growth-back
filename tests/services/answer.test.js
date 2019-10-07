@@ -205,7 +205,7 @@ describe('app/services/answer', () => {
     })
 
     describe('when the param is present', () => {
-      it('should have correct entries for epics', () => {
+      it('should have correct keys for epics', () => {
         const keys = ['comment', 'category', 'type']
         expect(answerService.classify({ comment: 'xyz' })).to.have.all.keys(keys)
       })
