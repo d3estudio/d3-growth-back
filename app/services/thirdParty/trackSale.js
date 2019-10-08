@@ -3,6 +3,7 @@ const moment = require('moment')
 const answersData = require('../../data/answers')
 const database = require('../../config/database')
 const proxy = require('../../config/proxy')
+const answerService = require('../answer')
 
 const { TRACK_SALE_TOKEN } = process.env
 const headers = { Authorization: `Bearer ${TRACK_SALE_TOKEN}` }
@@ -32,7 +33,7 @@ module.exports = {
   },
 
   handleAnswers(answers) {
-    return (answers || []).map(answer => this.parseAnswer(answer))
+    return (answers || []).map(answer => answerService.classify(this.parseAnswer(answer)))
   },
 
   answersUri(codes = '21', date = null) {

@@ -14,7 +14,7 @@ this api is being built with these technologies:
 
 - [x] retrieve all customers answers from tracksale (third-party)
 - [x] classify with a category and type
-- [ ] handle the payload and save the relevant information of them on the database (mongodb)
+- [x] handle the payload and save the relevant information of them on the database (mongodb)
 - [ ] provide an api to serve front-end (bff)
 - [ ] improve the classification system (and again, and again, ...)
 
