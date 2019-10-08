@@ -5,9 +5,9 @@ services:
       context: .
       dockerfile: Dockerfile-${NODE_ENV}
     ports:
-      - ${PORT}:${PORT}
+      - ${API_PORT}:${API_PORT}
     environment:
-      - PORT=${PORT}
+      - PORT=${API_PORT}
     env_file: .env
     depends_on:
       - database
