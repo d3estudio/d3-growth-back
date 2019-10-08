@@ -9,12 +9,17 @@ const mocha = require('mocha'),
 const moment = require('moment')
 const nock = require('nock')
 
+const database = require('../../../app/config/database')
 const trackSaleService = require('../../../app/services/thirdParty/trackSale')
 const mock = require('./trackSale.mock')
 const url = 'https://api.tracksale.co/v2'
 const uriRegex = /\/report\/answer\?codes=(.*)\&start=(\d{4}-\d{2}-\d{2})\&limit=-1/
 
+let db
+
 describe('app/services/thirdParty/trackSale', () => {
+  const answers = mock.retrieve
+
   describe('parseAnswer(answer)', () => {
     const keys = ['id', 'campaign', 'date', 'user', 'nps', 'comment', 'elapsedTime']
 
@@ -86,8 +91,6 @@ describe('app/services/thirdParty/trackSale', () => {
   })
 
   describe('retrieve(codes, date)', () => {
-    const answers = mock.retrieve
-
     beforeEach(() => {
       nock(url)
         .get(uriRegex)
@@ -103,6 +106,93 @@ describe('app/services/thirdParty/trackSale', () => {
         .catch(err => {
           console.error(err)
         })
+    })
+  })
+
+  describe('getAnswersIds(docs)', () => {
+    describe('when the params are not correct', () => {
+      it('should return empty array', () => {
+        trackSaleService
+          .getAnswerIds()
+          .should.be.an('array')
+          .with.lengthOf(0)
+      })
+    })
+
+    describe('when the params are correct', () => {
+      it('should return an array with ids', () => {
+        const answers = [{ id: 1, abc: 0 }, { id: 2, abc: 0 }]
+        const result = trackSaleService.getAnswerIds(answers)
+
+        result.should.be.an('array').with.lengthOf(answers.length)
+
+        expect(result[0]).to.equals(1)
+        expect(result[1]).to.equals(2)
+      })
+    })
+  })
+
+  describe('filterNewAnswers(currentIds, answers)', () => {
+    describe('when the params are not correct', () => {
+      it('should return empty array', () => {
+        trackSaleService
+          .filterNewAnswers()
+          .should.be.an('array')
+          .with.lengthOf(0)
+      })
+    })
+
+    describe('when the params are correct', () => {
+      it('should return an array with ids', () => {
+        const currentIds = [1, 3, 4]
+        const answers = [{ id: 1 }, { id: 2 }, { id: 5 }]
+        const result = trackSaleService.filterNewAnswers(currentIds, answers)
+
+        result.should.be.an('array').with.lengthOf(2)
+
+        expect(result[0]['id']).to.equals(2)
+      })
+    })
+  })
+
+  describe('updateDatabase()', () => {
+    before(done => {
+      database
+        .connect()
+        .then(instance => {
+          db = instance
+          done()
+        })
+        .catch(err => done(err))
+    })
+
+    beforeEach(() => {
+      nock(url)
+        .get(uriRegex)
+        .reply(200, answers)
+    })
+
+    it('should insert all answers on database', done => {
+      trackSaleService
+        .updateDatabase()
+        .then(result => {
+          result.should.have.property('insertedCount')
+          expect(result.insertedCount).to.equals(answers.length)
+          done()
+        })
+        .catch(err => done(err))
+    })
+
+    after(done => {
+      db.dropDatabase({}, (err, result) => {
+        database.closeConnection()
+
+        if (err) {
+          done(err)
+        } else {
+          done()
+        }
+      })
     })
   })
 })
