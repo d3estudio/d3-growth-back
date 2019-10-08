@@ -6,14 +6,18 @@ const { MONGO_DB, MONGO_HOST, MONGO_PORT } = process.env
 module.exports = {
   connect() {
     return new Promise((resolve, reject) => {
-      client.connect(this.uri(), { useNewUrlParser: true }, (err, client) => {
-        if (err) {
-          reject(err)
-        } else {
-          this.client = client
-          resolve(this.client.db(this.uri().database))
+      client.connect(
+        this.uri(),
+        { useNewUrlParser: true, useUnifiedTopology: true },
+        (err, client) => {
+          if (err) {
+            reject(err)
+          } else {
+            this.client = client
+            resolve(this.client.db(this.uri().database))
+          }
         }
-      })
+      )
     })
   },
 
