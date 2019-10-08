@@ -1,8 +1,8 @@
 module.exports = {
-  retrieveAll: [
+  retrieve: [
     {
       id: 1,
-      campain_code: 1,
+      campaign_code: 1,
       time: 1,
       email: 'address@email.com',
       nps_answer: 10,
@@ -11,7 +11,7 @@ module.exports = {
     },
     {
       id: 2,
-      campain_code: 1,
+      campaign_code: 1,
       time: 1,
       email: 'address2@email.com',
       nps_answer: 8,
@@ -20,7 +20,7 @@ module.exports = {
     },
     {
       id: 3,
-      campain_code: 1,
+      campaign_code: 1,
       time: 1,
       email: 'address3@email.com',
       nps_answer: 9,

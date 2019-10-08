@@ -8,8 +8,8 @@
   "private": true,
   "scripts": {
     "start": "node server.js",
-    "dev": "PORT=3000 SECRET='t0ken$ecret' USER=user PASSWORD=qwerty123 TRACK_SALE_TOKEN=* nodemon server.js",
-    "test": "SECRET='--' USER=user PASSWORD=123 mocha --timeout 2000 --exit 'tests/**/*.test.js'"
+    "dev": "nodemon server.js",
+    "test": "MONGO_DB=d3_growth_test MONGO_HOST=localhost MONGO_PORT=27017 AUTH_USER=usr AUTH_PASSWORD=abc TOKEN_SECRET=ts mocha --timeout 2000 --exit 'tests/**/*.test.js'"
   },
   "devDependencies": {
     "chai": "^4.2.0",
@@ -17,6 +17,7 @@
     "husky": "^3.0.5",
     "mocha": "^6.2.0",
     "nock": "^11.3.5",
+    "nodemon": "^1.19.3",
     "prettier": "1.18.2",
     "pretty-quick": "^1.11.1"
   },
@@ -40,6 +41,8 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "moment": "^2.24.0",
+    "mongodb": "^3.3.2",
+    "mongodb-uri": "^0.9.7",
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1"
   }
