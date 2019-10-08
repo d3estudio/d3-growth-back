@@ -11,7 +11,7 @@ const PASSWORD = process.env.PASSWORD
 
 chai.use(chaiHttp)
 
-describe('AuthApi', () => {
+describe('controllers/auth', () => {
   describe('post /auth/sign_in', () => {
     describe('when the req body is wrong or empty', () => {
       it('must return 401 with no body', done => {
