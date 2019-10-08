@@ -1,5 +1,5 @@
 module.exports = {
-  retrieveAll: [
+  retrieve: [
     {
       id: 1,
       campain_code: 1,

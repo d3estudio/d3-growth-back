@@ -1,6 +1,4 @@
-const AUTH_USER = process.env.AUTH_USER
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD
-const TOKEN_SECRET = process.env.TOKEN_SECRET
+const { AUTH_PASSWORD, AUTH_USER, TOKEN_SECRET } = process.env
 
 module.exports = {
   signIn(req, res) {

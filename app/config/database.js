@@ -1,9 +1,7 @@
 const client = require('mongodb').MongoClient
 const mongoUri = require('mongodb-uri')
 
-const MONGO_HOST = process.env.MONGO_HOST
-const MONGO_PORT = process.env.MONGO_PORT
-const MONGO_DB = process.env.MONGO_DB
+const { MONGO_DB, MONGO_HOST, MONGO_PORT } = process.env
 
 module.exports = {
   connect() {

@@ -6,12 +6,11 @@ const chaiHttp = require('chai-http')
 
 const server = require('../../../server')
 
-const AUTH_USER = process.env.AUTH_USER
-const AUTH_PASSWORD = process.env.AUTH_PASSWORD
+const { AUTH_PASSWORD, AUTH_USER } = process.env
 
 chai.use(chaiHttp)
 
-describe('controllers/auth', () => {
+describe('app/controllers/auth', () => {
   describe('post /auth/sign_in', () => {
     describe('when the req body is wrong or empty', () => {
       it('must return 401 with no body', done => {

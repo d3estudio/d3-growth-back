@@ -1,7 +1,7 @@
 const passport = require('passport')
 const BearerStrategy = require('passport-http-bearer')
 
-const TOKEN_SECRET = process.env.TOKEN_SECRET
+const { TOKEN_SECRET } = process.env
 
 passport.use(
   new BearerStrategy((token, done) => {
