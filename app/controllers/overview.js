@@ -2,7 +2,7 @@ const database = require('../config/database')
 const answersData = require('../data/answers')
 
 module.exports = {
-  npsReport(req, res) {
+  npsReport(_, res) {
     database
       .connect()
       .then(db => {
@@ -18,7 +18,7 @@ module.exports = {
       })
   },
 
-  summary(req, res) {
+  summary(_, res) {
     database
       .connect()
       .then(db => {

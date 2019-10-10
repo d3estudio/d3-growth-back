@@ -43,6 +43,26 @@ module.exports = {
     })
   },
 
+  getRelated(db, term) {
+    const query = [...answersHelper.termToQuery(term), { normalizedComment: { $ne: null } }]
+
+    return new Promise((resolve, reject) => {
+      db.collection(COLLECTION_NAME)
+        .find({
+          $and: query
+        })
+        .toArray((err, docs) => {
+          if (err) {
+            return reject(err)
+          }
+
+          const total = docs.length
+
+          return resolve({ total, docs })
+        })
+    })
+  },
+
   getAll(db) {
     return new Promise((resolve, reject) => {
       db.collection(COLLECTION_NAME)

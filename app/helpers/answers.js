@@ -1,4 +1,11 @@
 module.exports = {
+  normalizeAnswerString(answer) {
+    return `${answer}`
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+  },
+
   handleSummaryFromDb(docs) {
     return (docs || []).reduce(
       (previous, current) => {
@@ -17,5 +24,17 @@ module.exports = {
   calculateNps(summary) {
     const { promoter, detractor, total } = summary
     return Math.round(((promoter - detractor) / total) * 100)
+  },
+
+  termToQuery(term) {
+    const normalizedTerm = this.normalizeAnswerString(term)
+
+    console.log(normalizedTerm)
+
+    return (`${normalizedTerm}`.trim().split(' ') || []).map(item => {
+      return {
+        normalizedComment: new RegExp(item)
+      }
+    })
   }
 }

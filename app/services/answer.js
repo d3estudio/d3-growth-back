@@ -1,20 +1,14 @@
 const keywords = require('../utils/keywords.json')
+const answersHelper = require('../helpers/answers')
 
 module.exports = {
-  normalizeAnswerString(answer) {
-    return `${answer}`
-      .toLowerCase()
-      .normalize('NFD')
-      .replace(/[\u0300-\u036f]/g, '')
-  },
-
   keywordsEntries(step) {
     return Object.entries(keywords[step] || {})
   },
 
   testAnswer(answer, key) {
     const regex = new RegExp(key)
-    return regex.test(this.normalizeAnswerString(answer)) ? 1 : 0
+    return regex.test(answersHelper.normalizeAnswerString(answer)) ? 1 : 0
   },
 
   assurance(answer, points) {
@@ -76,6 +70,7 @@ module.exports = {
   classify(answer) {
     return {
       ...answer,
+      normalizedComment: answersHelper.normalizeAnswerString(answer['comment']),
       category: this.classifyStep(answer['comment'], 'categories'),
       type: this.classifyType(parseInt(answer['nps']))
     }
