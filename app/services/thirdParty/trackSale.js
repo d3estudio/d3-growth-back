@@ -57,9 +57,7 @@ module.exports = {
   },
 
   filterNewAnswers(currentIds, answers) {
-    return (answers || []).filter(
-      answer => !(currentIds || []).includes(answer.id) && !!answer.comment
-    )
+    return (answers || []).filter(answer => !(currentIds || []).includes(answer.id))
   },
 
   updateDatabase() {
