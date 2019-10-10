@@ -10,7 +10,7 @@ module.exports = {
         return res.status(204).send()
       })
       .catch(err => {
-        return res.status(422).send(err)
+        return res.status(424).send(err)
       })
   },
 

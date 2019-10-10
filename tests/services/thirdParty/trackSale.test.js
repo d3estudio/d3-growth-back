@@ -15,6 +15,7 @@ const mock = require('./trackSale.mock')
 const url = 'https://api.tracksale.co/v2'
 const uriRegex = /\/report\/answer\?codes=(.*)\&start=(\d{4}-\d{2}-\d{2})\&limit=-1/
 
+const { TRACK_SALE_CAMPAIGNS } = process.env
 let db
 
 describe('app/services/thirdParty/trackSale', () => {
@@ -59,8 +60,8 @@ describe('app/services/thirdParty/trackSale', () => {
     describe('when the params are not present', () => {
       const [_, codes, start] = uriRegex.exec(trackSaleService.answersUri())
 
-      it('should return uri with param codes = 21', () => {
-        expect(codes).to.equals('21')
+      it(`should return uri with param codes = ${TRACK_SALE_CAMPAIGNS}`, () => {
+        expect(codes).to.equals(TRACK_SALE_CAMPAIGNS)
       })
 
       it('should return uri with yesterday as start param', () => {

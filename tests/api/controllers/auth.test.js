@@ -31,13 +31,13 @@ describe('app/controllers/auth', () => {
         password: AUTH_PASSWORD
       }
 
-      it('must return 200 with token on body', done => {
+      it('must return 201 with token on body', done => {
         chai
           .request(server)
           .post('/auth/sign_in')
           .send(data)
           .end((err, res) => {
-            res.should.have.status(200)
+            res.should.have.status(201)
             res.body.should.be.an('object')
             expect(res.body).to.have.property('token')
             done()

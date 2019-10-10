@@ -29,8 +29,6 @@ module.exports = {
   termToQuery(term) {
     const normalizedTerm = this.normalizeAnswerString(term)
 
-    console.log(normalizedTerm)
-
     return (`${normalizedTerm}`.trim().split(' ') || []).map(item => {
       return {
         normalizedComment: new RegExp(item)

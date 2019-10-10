@@ -3,6 +3,32 @@ const answersHelper = require('../helpers/answers')
 const COLLECTION_NAME = 'answers'
 
 module.exports = {
+  insertMany(db, docs) {
+    return new Promise((resolve, reject) => {
+      db.collection(COLLECTION_NAME).insertMany(docs, (err, result) => {
+        if (err) {
+          return reject(err)
+        }
+
+        return resolve(result)
+      })
+    })
+  },
+
+  getAll(db) {
+    return new Promise((resolve, reject) => {
+      db.collection(COLLECTION_NAME)
+        .find({})
+        .toArray((err, docs) => {
+          if (err) {
+            return reject(err)
+          }
+
+          return resolve(docs)
+        })
+    })
+  },
+
   getNps(db) {
     return new Promise((resolve, reject) => {
       db.collection(COLLECTION_NAME)
@@ -60,32 +86,6 @@ module.exports = {
 
           return resolve({ total, docs })
         })
-    })
-  },
-
-  getAll(db) {
-    return new Promise((resolve, reject) => {
-      db.collection(COLLECTION_NAME)
-        .find({})
-        .toArray((err, docs) => {
-          if (err) {
-            return reject(err)
-          }
-
-          return resolve(docs)
-        })
-    })
-  },
-
-  insertMany(db, docs) {
-    return new Promise((resolve, reject) => {
-      db.collection(COLLECTION_NAME).insertMany(docs, (err, result) => {
-        if (err) {
-          return reject(err)
-        }
-
-        return resolve(result)
-      })
     })
   }
 }

@@ -54,6 +54,12 @@ describe('app/data/answers', () => {
     })
   })
 
+  describe('getNps(db)', () => {})
+
+  describe('getSummary(db)', () => {})
+
+  describe('getRelated(db, term)', () => {})
+
   after(done => {
     db.dropDatabase({}, (err, result) => {
       database.closeConnection()

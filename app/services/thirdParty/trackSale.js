@@ -5,7 +5,7 @@ const database = require('../../config/database')
 const proxy = require('../../config/proxy')
 const answerService = require('../answer')
 
-const { TRACK_SALE_TOKEN } = process.env
+const { TRACK_SALE_TOKEN, TRACK_SALE_CAMPAIGNS } = process.env
 const headers = { Authorization: `Bearer ${TRACK_SALE_TOKEN}` }
 const url = 'https://api.tracksale.co/v2'
 
@@ -38,7 +38,7 @@ module.exports = {
 
   answersUri(codes, date) {
     const startDate = moment(date || moment().subtract(1, 'day')).format('YYYY-MM-DD')
-    return `${url}/report/answer?codes=${codes || '21'}&start=${startDate}&limit=-1`
+    return `${url}/report/answer?codes=${codes || TRACK_SALE_CAMPAIGNS}&start=${startDate}&limit=-1`
   },
 
   retrieve(codes, date) {

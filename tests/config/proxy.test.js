@@ -9,4 +9,7 @@ describe('app/config/proxy', () => {
       proxy.should.be.a('function')
     })
   })
+
+  describe('default config', () => {})
+  describe('custom headers', () => {})
 })

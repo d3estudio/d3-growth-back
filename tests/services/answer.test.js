@@ -10,31 +10,6 @@ const answerService = require('../../app/services/answer')
 const keywordsData = require('../../app/utils/keywords.json')
 
 describe('app/services/answer', () => {
-  describe('normalizeAnswerString(answer)', () => {
-    describe('when the param is not present', () => {
-      it('should return an empty string', () => {
-        answerService
-          .normalizeAnswerString('')
-          .should.be.a('string')
-          .with.lengthOf(0)
-      })
-    })
-
-    describe('when the param is present', () => {
-      describe('and contains accent or cedilha', () => {
-        it('should return normalized string', () => {
-          assert.equal(answerService.normalizeAnswerString('çãúâAñö çñ'), 'cauaano cn')
-        })
-      })
-
-      describe('and is a number', () => {
-        it('should convert number into a string', () => {
-          assert.equal(answerService.normalizeAnswerString(12345), '12345')
-        })
-      })
-    })
-  })
-
   describe('keywordsEntries(step)', () => {
     describe('when the param is not present', () => {
       it('should return an empty array', () => {
@@ -160,14 +135,14 @@ describe('app/services/answer', () => {
 
     describe('when the params are present', () => {
       describe('and the step is categories', () => {
-        it('should return a-mrv', () => {
-          const answer = keywordsData.categories['a-mrv'].toString()
-          assert.equal(answerService.classifyStep(answer, 'categories'), 'a-mrv')
+        it('should return client', () => {
+          const answer = keywordsData.categories['client'].toString()
+          assert.equal(answerService.classifyStep(answer, 'categories'), 'client')
         })
 
-        it('should return usabilidade', () => {
-          const answer = keywordsData.categories.usabilidade.toString()
-          assert.equal(answerService.classifyStep(answer, 'categories'), 'usabilidade')
+        it('should return usability', () => {
+          const answer = keywordsData.categories['usability'].toString()
+          assert.equal(answerService.classifyStep(answer, 'categories'), 'usability')
         })
       })
     })
@@ -197,17 +172,17 @@ describe('app/services/answer', () => {
     })
   })
 
-  describe(' classify(answer)', () => {
+  describe('classify(answer)', () => {
     describe('when the param comment is not present', () => {
       it('should return an empty object', () => {
-        const keys = ['category', 'type']
+        const keys = ['category', 'type', 'normalizedComment']
         expect(answerService.classify({})).to.have.all.keys(keys)
       })
     })
 
     describe('when the param is present', () => {
       it('should have correct keys for epics', () => {
-        const keys = ['comment', 'category', 'type']
+        const keys = ['comment', 'category', 'type', 'normalizedComment']
         expect(answerService.classify({ comment: 'xyz' })).to.have.all.keys(keys)
       })
     })
