@@ -10,11 +10,11 @@ module.exports = {
       })
       .then(result => {
         database.closeConnection()
-        res.send(result)
+        return res.send(result)
       })
       .catch(err => {
         database.closeConnection()
-        res.send(err)
+        return res.status(422).send(err)
       })
   }
 }
