@@ -36,9 +36,9 @@ module.exports = {
     return (answers || []).map(answer => answerService.classify(this.parseAnswer(answer)))
   },
 
-  answersUri(codes = '21', date = null) {
+  answersUri(codes, date) {
     const startDate = moment(date || moment().subtract(1, 'day')).format('YYYY-MM-DD')
-    return `${url}/report/answer?codes=${codes}&start=${startDate}&limit=-1`
+    return `${url}/report/answer?codes=${codes || '21'}&start=${startDate}&limit=-1`
   },
 
   retrieve(codes, date) {
@@ -72,11 +72,11 @@ module.exports = {
         })
         .then(docs => {
           ids = this.getAnswerIds(docs)
-          return this.retrieve()
+          return this.retrieve('', moment().subtract(3, 'months'))
         })
         .then(answers => {
           const toInsert = this.filterNewAnswers(ids, answers)
-          return answersData.insertMany(db, toInsert)
+          return toInsert ? answersData.insertMany(db, toInsert) : Promise.resolve([])
         })
         .then(result => {
           database.closeConnection()

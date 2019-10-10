@@ -56,13 +56,13 @@ describe('app/services/answer', () => {
       })
 
       describe('and the value exists in json', () => {
-        const { categorias } = keywordsData
+        const { categories } = keywordsData
 
         it('should return correct array length for categories', () => {
           answerService
-            .keywordsEntries('categorias')
+            .keywordsEntries('categories')
             .should.be.an('array')
-            .with.lengthOf(Object.entries(categorias).length)
+            .with.lengthOf(Object.entries(categories).length)
         })
       })
     })
@@ -125,8 +125,8 @@ describe('app/services/answer', () => {
 
     describe('when the params are present', () => {
       it('should have correct entries for categories', () => {
-        const keys = Object.keys(keywordsData.categorias)
-        expect(answerService.checkStepKeywords('', 'categorias')).to.have.all.keys(keys)
+        const keys = Object.keys(keywordsData.categories)
+        expect(answerService.checkStepKeywords('', 'categories')).to.have.all.keys(keys)
       })
     })
   })
@@ -161,13 +161,13 @@ describe('app/services/answer', () => {
     describe('when the params are present', () => {
       describe('and the step is categories', () => {
         it('should return a-mrv', () => {
-          const answer = keywordsData.categorias['a-mrv'].toString()
-          assert.equal(answerService.classifyStep(answer, 'categorias'), 'a-mrv')
+          const answer = keywordsData.categories['a-mrv'].toString()
+          assert.equal(answerService.classifyStep(answer, 'categories'), 'a-mrv')
         })
 
         it('should return usabilidade', () => {
-          const answer = keywordsData.categorias.usabilidade.toString()
-          assert.equal(answerService.classifyStep(answer, 'categorias'), 'usabilidade')
+          const answer = keywordsData.categories.usabilidade.toString()
+          assert.equal(answerService.classifyStep(answer, 'categories'), 'usabilidade')
         })
       })
     })
@@ -175,8 +175,8 @@ describe('app/services/answer', () => {
 
   describe('classifyType(nps)', () => {
     describe('when the params are not present', () => {
-      it('should return null', () => {
-        assert.equal(answerService.classifyType(null), null)
+      it('should return detractor', () => {
+        assert.equal(answerService.classifyType(null), 'detractor')
       })
     })
 
@@ -200,7 +200,8 @@ describe('app/services/answer', () => {
   describe(' classify(answer)', () => {
     describe('when the param comment is not present', () => {
       it('should return an empty object', () => {
-        expect(answerService.classify({ a: 1, b: 2 })).to.be.empty
+        const keys = ['category', 'type']
+        expect(answerService.classify({})).to.have.all.keys(keys)
       })
     })
 

@@ -63,10 +63,6 @@ module.exports = {
   },
 
   classifyType(nps) {
-    if (!nps) {
-      return null
-    }
-
     switch (true) {
       case nps >= 9:
         return 'promoter'
@@ -78,13 +74,9 @@ module.exports = {
   },
 
   classify(answer) {
-    if (!answer['comment']) {
-      return {}
-    }
-
     return {
       ...answer,
-      category: this.classifyStep(answer['comment'], 'categorias'),
+      category: this.classifyStep(answer['comment'], 'categories'),
       type: this.classifyType(parseInt(answer['nps']))
     }
   }
