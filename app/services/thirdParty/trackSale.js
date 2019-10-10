@@ -66,8 +66,8 @@ module.exports = {
     return new Promise((resolve, reject) => {
       database
         .connect()
-        .then(dbInstance => {
-          db = dbInstance
+        .then(instance => {
+          db = instance
           return answersData.getAll(db)
         })
         .then(docs => {
@@ -76,7 +76,7 @@ module.exports = {
         })
         .then(answers => {
           const toInsert = this.filterNewAnswers(ids, answers)
-          return toInsert ? answersData.insertMany(db, toInsert) : Promise.resolve([])
+          return toInsert.length ? answersData.insertMany(db, toInsert) : Promise.resolve([])
         })
         .then(result => {
           database.closeConnection()
