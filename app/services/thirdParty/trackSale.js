@@ -24,7 +24,7 @@ module.exports = {
     return {
       id,
       campaign,
-      date,
+      date: moment.unix(date).toDate(),
       user,
       nps,
       comment,
@@ -57,7 +57,9 @@ module.exports = {
   },
 
   filterNewAnswers(currentIds, answers) {
-    return (answers || []).filter(answer => !(currentIds || []).includes(answer.id))
+    return (answers || []).filter(
+      answer => !(currentIds || []).includes(answer.id) && !!answer.comment
+    )
   },
 
   updateDatabase() {
