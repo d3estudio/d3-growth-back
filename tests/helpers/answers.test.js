@@ -4,6 +4,7 @@ const chai = require('chai'),
   should = chai.should()
 
 const answersHelper = require('../../app/helpers/answers')
+const mock = require('../mocks/answersHelper.mock')
 
 describe('app/helpers/answers', () => {
   describe('normalizeAnswerString(answer)', () => {
@@ -31,7 +32,58 @@ describe('app/helpers/answers', () => {
     })
   })
 
-  describe('handleSummaryFromDb(docs)', () => {})
-  describe('calculateNps(summary)', () => {})
-  describe('termToQuery(term)', () => {})
+  describe('handleSummaryFromDb(docs)', () => {
+    const data = mock.aggregateByTypes
+
+    it('should return correct properties', () => {
+      const keys = ['total', 'promoter', 'neutral', 'detractor']
+      answersHelper.handleSummaryFromDb(data).should.have.all.keys(keys)
+    })
+
+    it('should return correct total', () => {
+      const expected = mock.aggregateByTypes.reduce((prev, current) => {
+        return prev + current.count
+      }, 0)
+
+      const { total } = answersHelper.handleSummaryFromDb(data)
+
+      expect(total).to.equals(expected)
+    })
+  })
+
+  describe('calculateNps(summary)', () => {
+    it('should calculate correct nps', () => {
+      const promoter = 80
+      const detractor = 17
+      const total = promoter + detractor
+
+      const expected = Math.round(((promoter - detractor) / total) * 100)
+
+      const nps = answersHelper.calculateNps({ promoter, detractor, total })
+
+      expect(nps).to.equals(expected)
+    })
+  })
+
+  describe('termToQuery(term)', () => {
+    it('should return correct query for term "abc"', () => {
+      const term = 'abc'
+
+      answersHelper.termToQuery(term).should.have.length(1)
+      answersHelper.termToQuery(term)[0].should.have.property('normalizedComment')
+      answersHelper.termToQuery(term)[0]['normalizedComment'].test('abc').should.be.true
+    })
+
+    it('should return correct query for term "abc"', () => {
+      const term = 'a b c'
+
+      answersHelper.termToQuery(term).should.have.length(3)
+
+      answersHelper.termToQuery(term)[0].should.have.property('normalizedComment')
+
+      answersHelper.termToQuery(term)[0]['normalizedComment'].test('a').should.be.true
+      answersHelper.termToQuery(term)[1]['normalizedComment'].test('a').should.be.false
+      answersHelper.termToQuery(term)[2]['normalizedComment'].test('a').should.be.false
+    })
+  })
 })

@@ -8,7 +8,7 @@ const nock = require('nock')
 
 const database = require('../../../app/config/database')
 const trackSaleService = require('../../../app/services/thirdParty/trackSale')
-const mock = require('./trackSale.mock')
+const mock = require('../../mocks/trackSaleService.mock')
 
 const url = 'https://api.tracksale.co/v2'
 const uriRegex = /\/report\/answer\?codes=(.*)\&start=(\d{4}-\d{2}-\d{2})\&limit=-1/
