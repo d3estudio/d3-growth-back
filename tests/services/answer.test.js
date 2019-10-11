@@ -3,9 +3,6 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should()
 
-const mocha = require('mocha'),
-  describe = mocha.describe
-
 const answerService = require('../../app/services/answer')
 const keywordsData = require('../../app/utils/keywords.json')
 

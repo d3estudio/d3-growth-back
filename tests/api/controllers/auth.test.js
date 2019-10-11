@@ -13,7 +13,7 @@ chai.use(chaiHttp)
 describe('app/controllers/auth', () => {
   describe('post /auth/sign_in', () => {
     describe('when the req body is wrong or empty', () => {
-      it('must return 401 with no body', done => {
+      it('should return 401 with no body', done => {
         chai
           .request(server)
           .post('/auth/sign_in')
@@ -31,7 +31,7 @@ describe('app/controllers/auth', () => {
         password: AUTH_PASSWORD
       }
 
-      it('must return 201 with token on body', done => {
+      it('should return 201 with token on body', done => {
         chai
           .request(server)
           .post('/auth/sign_in')

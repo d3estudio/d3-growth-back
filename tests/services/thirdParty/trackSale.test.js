@@ -3,15 +3,13 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should()
 
-const mocha = require('mocha'),
-  describe = mocha.describe
-
 const moment = require('moment')
 const nock = require('nock')
 
 const database = require('../../../app/config/database')
 const trackSaleService = require('../../../app/services/thirdParty/trackSale')
 const mock = require('./trackSale.mock')
+
 const url = 'https://api.tracksale.co/v2'
 const uriRegex = /\/report\/answer\?codes=(.*)\&start=(\d{4}-\d{2}-\d{2})\&limit=-1/
 
@@ -19,6 +17,28 @@ const { TRACK_SALE_CAMPAIGNS } = process.env
 let db
 
 describe('app/services/thirdParty/trackSale', () => {
+  before(done => {
+    database
+      .connect()
+      .then(instance => {
+        db = instance
+        done()
+      })
+      .catch(err => done(err))
+  })
+
+  after(done => {
+    db.dropDatabase({}, (err, result) => {
+      database.closeConnection()
+
+      if (err) {
+        done(err)
+      } else {
+        done()
+      }
+    })
+  })
+
   const answers = mock.retrieve
 
   describe('parseAnswer(answer)', () => {
@@ -157,16 +177,6 @@ describe('app/services/thirdParty/trackSale', () => {
   })
 
   describe('updateDatabase()', () => {
-    before(done => {
-      database
-        .connect()
-        .then(instance => {
-          db = instance
-          done()
-        })
-        .catch(err => done(err))
-    })
-
     beforeEach(() => {
       nock(url)
         .get(uriRegex)

@@ -3,9 +3,6 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should()
 
-const mocha = require('mocha'),
-  describe = mocha.describe
-
 const chaiHttp = require('chai-http')
 
 const answersData = require('../../app/data/answers')
@@ -27,6 +24,18 @@ describe('app/data/answers', () => {
       .catch(err => {
         done(err)
       })
+  })
+
+  after(done => {
+    db.dropDatabase({}, (err, result) => {
+      database.closeConnection()
+
+      if (err) {
+        done(err)
+      } else {
+        done()
+      }
+    })
   })
 
   describe('insertMany(db)', () => {
@@ -59,16 +68,4 @@ describe('app/data/answers', () => {
   describe('getSummary(db)', () => {})
 
   describe('getRelated(db, term)', () => {})
-
-  after(done => {
-    db.dropDatabase({}, (err, result) => {
-      database.closeConnection()
-
-      if (err) {
-        done(err)
-      } else {
-        done()
-      }
-    })
-  })
 })

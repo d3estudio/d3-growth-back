@@ -77,14 +77,14 @@ module.exports = {
         .find({
           $and: query
         })
-        .toArray((err, docs) => {
+        .toArray((err, answers) => {
           if (err) {
             return reject(err)
           }
 
-          const total = docs.length
+          const total = answers.length
 
-          return resolve({ total, docs })
+          return resolve({ total, answers })
         })
     })
   }
