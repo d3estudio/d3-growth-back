@@ -5,7 +5,7 @@ const database = require('../../config/database')
 const proxy = require('../../config/proxy')
 const answerService = require('../answer')
 
-const { TRACK_SALE_TOKEN } = process.env
+const { TRACK_SALE_TOKEN, TRACK_SALE_CAMPAIGNS } = process.env
 const headers = { Authorization: `Bearer ${TRACK_SALE_TOKEN}` }
 const url = 'https://api.tracksale.co/v2'
 
@@ -24,7 +24,7 @@ module.exports = {
     return {
       id,
       campaign,
-      date,
+      date: moment.unix(date).toDate(),
       user,
       nps,
       comment,
@@ -36,9 +36,9 @@ module.exports = {
     return (answers || []).map(answer => answerService.classify(this.parseAnswer(answer)))
   },
 
-  answersUri(codes = '21', date = null) {
+  answersUri(codes, date) {
     const startDate = moment(date || moment().subtract(1, 'day')).format('YYYY-MM-DD')
-    return `${url}/report/answer?codes=${codes}&start=${startDate}&limit=-1`
+    return `${url}/report/answer?codes=${codes || TRACK_SALE_CAMPAIGNS}&start=${startDate}&limit=-1`
   },
 
   retrieve(codes, date) {
@@ -66,17 +66,17 @@ module.exports = {
     return new Promise((resolve, reject) => {
       database
         .connect()
-        .then(dbInstance => {
-          db = dbInstance
+        .then(instance => {
+          db = instance
           return answersData.getAll(db)
         })
         .then(docs => {
           ids = this.getAnswerIds(docs)
-          return this.retrieve()
+          return this.retrieve('', moment().subtract(3, 'months'))
         })
         .then(answers => {
           const toInsert = this.filterNewAnswers(ids, answers)
-          return answersData.insertMany(db, toInsert)
+          return toInsert.length ? answersData.insertMany(db, toInsert) : Promise.resolve([])
         })
         .then(result => {
           database.closeConnection()

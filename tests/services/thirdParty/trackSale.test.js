@@ -3,21 +3,42 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should()
 
-const mocha = require('mocha'),
-  describe = mocha.describe
-
 const moment = require('moment')
 const nock = require('nock')
 
 const database = require('../../../app/config/database')
 const trackSaleService = require('../../../app/services/thirdParty/trackSale')
-const mock = require('./trackSale.mock')
+const mock = require('../../mocks/trackSaleService.mock')
+
 const url = 'https://api.tracksale.co/v2'
 const uriRegex = /\/report\/answer\?codes=(.*)\&start=(\d{4}-\d{2}-\d{2})\&limit=-1/
 
+const { TRACK_SALE_CAMPAIGNS } = process.env
 let db
 
 describe('app/services/thirdParty/trackSale', () => {
+  before(done => {
+    database
+      .connect()
+      .then(instance => {
+        db = instance
+        done()
+      })
+      .catch(err => done(err))
+  })
+
+  after(done => {
+    db.dropDatabase({}, (err, result) => {
+      database.closeConnection()
+
+      if (err) {
+        done(err)
+      } else {
+        done()
+      }
+    })
+  })
+
   const answers = mock.retrieve
 
   describe('parseAnswer(answer)', () => {
@@ -59,8 +80,8 @@ describe('app/services/thirdParty/trackSale', () => {
     describe('when the params are not present', () => {
       const [_, codes, start] = uriRegex.exec(trackSaleService.answersUri())
 
-      it('should return uri with param codes = 21', () => {
-        expect(codes).to.equals('21')
+      it(`should return uri with param codes = ${TRACK_SALE_CAMPAIGNS}`, () => {
+        expect(codes).to.equals(TRACK_SALE_CAMPAIGNS)
       })
 
       it('should return uri with yesterday as start param', () => {
@@ -156,16 +177,6 @@ describe('app/services/thirdParty/trackSale', () => {
   })
 
   describe('updateDatabase()', () => {
-    before(done => {
-      database
-        .connect()
-        .then(instance => {
-          db = instance
-          done()
-        })
-        .catch(err => done(err))
-    })
-
     beforeEach(() => {
       nock(url)
         .get(uriRegex)

@@ -13,7 +13,7 @@ chai.use(chaiHttp)
 describe('app/controllers/auth', () => {
   describe('post /auth/sign_in', () => {
     describe('when the req body is wrong or empty', () => {
-      it('must return 401 with no body', done => {
+      it('should return 401 with no body', done => {
         chai
           .request(server)
           .post('/auth/sign_in')
@@ -31,13 +31,13 @@ describe('app/controllers/auth', () => {
         password: AUTH_PASSWORD
       }
 
-      it('must return 200 with token on body', done => {
+      it('should return 201 with token on body', done => {
         chai
           .request(server)
           .post('/auth/sign_in')
           .send(data)
           .end((err, res) => {
-            res.should.have.status(200)
+            res.should.have.status(201)
             res.body.should.be.an('object')
             expect(res.body).to.have.property('token')
             done()

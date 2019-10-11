@@ -3,14 +3,11 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should()
 
-const mocha = require('mocha'),
-  describe = mocha.describe
-
 const chaiHttp = require('chai-http')
 
 const answersData = require('../../app/data/answers')
 const database = require('../../app/config/database')
-const mock = require('./answers.mock')
+const mock = require('../mocks/answersData.mock')
 
 chai.use(chaiHttp)
 
@@ -27,6 +24,18 @@ describe('app/data/answers', () => {
       .catch(err => {
         done(err)
       })
+  })
+
+  after(done => {
+    db.dropDatabase({}, (err, result) => {
+      database.closeConnection()
+
+      if (err) {
+        done(err)
+      } else {
+        done()
+      }
+    })
   })
 
   describe('insertMany(db)', () => {
@@ -54,15 +63,73 @@ describe('app/data/answers', () => {
     })
   })
 
-  after(done => {
-    db.dropDatabase({}, (err, result) => {
-      database.closeConnection()
+  describe('getNps(db)', () => {
+    it('should return correct properties', done => {
+      const keys = ['nps', 'summary']
 
-      if (err) {
-        done(err)
-      } else {
-        done()
-      }
+      answersData
+        .getNps(db)
+        .then(doc => {
+          doc.should.be.an('object').with.all.keys(keys)
+          done()
+        })
+        .catch(err => {
+          done(err)
+        })
+    })
+  })
+
+  describe('getSummary(db)', () => {
+    it('should return an object with correct properties', done => {
+      answersData
+        .getNps(db)
+        .then(doc => {
+          doc.should.be.an('object').with.property('summary')
+          done()
+        })
+        .catch(err => {
+          done(err)
+        })
+    })
+  })
+
+  describe('getRelated(db, term)', () => {
+    it('should return an object with correct properties', done => {
+      const keys = ['total', 'answers']
+
+      answersData
+        .getRelated(db, 'Lorem Ipsum')
+        .then(doc => {
+          doc.should.be.an('object').with.all.keys(keys)
+          done()
+        })
+        .catch(err => {
+          done(err)
+        })
+    })
+
+    it('should return correct documents for "Lorem Ipsum"', done => {
+      answersData
+        .getRelated(db, 'Lorem Ipsum')
+        .then(doc => {
+          expect(doc.answers.length).to.equals(mock.all.length)
+          done()
+        })
+        .catch(err => {
+          done(err)
+        })
+    })
+
+    it('should return correct documents for "C"', done => {
+      answersData
+        .getRelated(db, 'c')
+        .then(doc => {
+          expect(doc.answers.length).to.equals(1)
+          done()
+        })
+        .catch(err => {
+          done(err)
+        })
     })
   })
 })
