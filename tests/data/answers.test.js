@@ -49,6 +49,38 @@ describe('app/data/answers', () => {
     })
   })
 
+  describe('getIndexCount({ db, query })', () => {
+    it('should return correct answers count from database', done => {
+      const query = {}
+
+      answersData
+        .getIndexCount({ db, query })
+        .then(count => {
+          expect(count).to.equals(mock.all.length)
+          done()
+        })
+        .catch(err => {
+          done(err)
+        })
+    })
+  })
+
+  describe('getIndex({ db, query, sort, skip })', () => {
+    const [query, sort, skip] = [{}, {}, 0]
+
+    it('should return correct answers from database', done => {
+      answersData
+        .getIndex({ db, query, sort, skip })
+        .then(docs => {
+          docs.should.be.an('array').with.lengthOf(mock.all.length)
+          done()
+        })
+        .catch(err => {
+          done(err)
+        })
+    })
+  })
+
   describe('getAll(db)', () => {
     it('should return all answers from database', done => {
       answersData
