@@ -34,22 +34,28 @@ module.exports = {
   },
 
   index(req, res) {
-    const { query } = req
-    const { sort_by: sortBy, direction, page } = query
+    let db, total
+    const { query: params } = req
+    const query = queriesHelper.requestParamsToQuery(params)
 
     database
       .connect()
-      .then(db => {
-        return answersData.getIndex({
-          db,
-          query: queriesHelper.requestParamsToQuery(query),
-          sort: queriesHelper.sortByToQuery(sortBy, direction),
-          skip: queriesHelper.skipToQuery(page)
-        })
+      .then(instance => {
+        db = instance
+        return answersData.getIndexCount({ db, query })
       })
-      .then(result => {
+      .then(count => {
+        total = count
+
+        const { sort_by: sortBy, direction, page } = params
+        const sort = queriesHelper.sortByToQuery(sortBy, direction)
+        const skip = queriesHelper.skipToQuery(page)
+
+        return answersData.getIndex({ db, query, sort, skip })
+      })
+      .then(answers => {
         database.closeConnection()
-        return res.send(result)
+        return res.send({ total, answers })
       })
       .catch(err => {
         database.closeConnection()

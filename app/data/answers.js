@@ -16,13 +16,25 @@ module.exports = {
     })
   },
 
+  getIndexCount({ db, query }) {
+    return new Promise((resolve, reject) => {
+      db.collection(COLLECTION_NAME).countDocuments(query, (err, count) => {
+        if (err) {
+          return reject(err)
+        }
+
+        return resolve(count)
+      })
+    })
+  },
+
   getIndex({ db, query, sort, skip }) {
     return new Promise((resolve, reject) => {
       db.collection(COLLECTION_NAME)
         .find(query)
         .project({ _id: 0, normalizedComment: 0 })
-        .sort(sort)
         .collation({ locale: 'pt' })
+        .sort(sort)
         .skip(skip)
         .limit(10)
         .toArray((err, docs) => {
@@ -39,6 +51,7 @@ module.exports = {
     return new Promise((resolve, reject) => {
       db.collection(COLLECTION_NAME)
         .find({})
+        .project({ _id: 0, normalizedComment: 0 })
         .toArray((err, docs) => {
           if (err) {
             return reject(err)
@@ -97,6 +110,7 @@ module.exports = {
         .find({
           $and: query
         })
+        .project({ _id: 0, normalizedComment: 0 })
         .toArray((err, answers) => {
           if (err) {
             return reject(err)

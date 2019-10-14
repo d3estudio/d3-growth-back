@@ -45,7 +45,16 @@ module.exports = {
   },
 
   sortByToQuery(sortBy, direction) {
-    const sortableColumns = ['id', 'elapsedTime', 'date', 'user', 'nps']
+    const sortableColumns = [
+      'id',
+      'campaign',
+      'date',
+      'user',
+      'nps',
+      'elapsedTime',
+      'category',
+      'type'
+    ]
 
     const column = sortableColumns.includes(sortBy) ? sortBy : 'date'
     const dir = ['1', '-1'].includes(direction) ? direction : '-1'
