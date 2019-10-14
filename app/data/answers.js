@@ -1,4 +1,5 @@
 const answersHelper = require('../helpers/answers')
+const queriesHelper = require('../helpers/queries')
 
 const COLLECTION_NAME = 'answers'
 
@@ -12,6 +13,25 @@ module.exports = {
 
         return resolve(result)
       })
+    })
+  },
+
+  getIndex({ db, query, sort, skip }) {
+    return new Promise((resolve, reject) => {
+      db.collection(COLLECTION_NAME)
+        .find(query)
+        .project({ _id: 0, normalizedComment: 0 })
+        .sort(sort)
+        .collation({ locale: 'pt' })
+        .skip(skip)
+        .limit(10)
+        .toArray((err, docs) => {
+          if (err) {
+            return reject(err)
+          }
+
+          return resolve(docs)
+        })
     })
   },
 
@@ -70,7 +90,7 @@ module.exports = {
   },
 
   getRelated(db, term) {
-    const query = [...answersHelper.termToQuery(term), { normalizedComment: { $ne: null } }]
+    const query = [...queriesHelper.termToQuery(term), { normalizedComment: { $ne: null } }]
 
     return new Promise((resolve, reject) => {
       db.collection(COLLECTION_NAME)
