@@ -1,6 +1,0 @@
-FROM node:12.10.0
-WORKDIR /app
-COPY package.json ./
-RUN npm install --only=prod --silent
-COPY . .
-CMD ["npm", "run", "start"]

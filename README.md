@@ -15,18 +15,20 @@ this api is being built with these technologies:
 - [x] retrieve all customers answers from tracksale (third-party)
 - [x] classify with a category and type
 - [x] handle the payload and save the relevant information of them on the database (mongodb)
-- [ ] provide an api to serve front-end (bff)
+- [x] provide an api to serve front-end (bff)
 - [ ] improve the classification system (and again, and again, ...)
 
-## how to run this project?
+## how to run this project in development mode?
 
 1. duplicate the `.env.sample` file located on the root path and name it as `.env`
 2. change the `.env` based on your preferences
-3. check if you already have installed docker
-4. run `docker-compose up` command
+3. check if you already have installed docker and docker-compose
+4. run `docker-compose up dev` command
 
-> ⚠️ the `NODE_ENV` param in `.env` can only be set as `development` or `production`
+## how to run the tests?
 
-## development and tests
+to run tests, just execute this following command on the root path `docker-compose up test`
 
-to run tests, just execute this following command on the root path `yarn test`
+## how to build?
+
+to build an image, use the `Dockerfile.prod` with the `.env` file.
