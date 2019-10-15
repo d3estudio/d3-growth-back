@@ -4,6 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-${NODE_ENV}
+    container_name: backend
     ports:
       - ${API_PORT}:${API_PORT}
     environment:
@@ -15,6 +16,7 @@ services:
       - .:/home/node/app
   database:
     image: mongo
+    container_name: mongo
     ports:
       - 27017:27017
     volumes:
