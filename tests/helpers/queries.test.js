@@ -157,5 +157,37 @@ describe('app/helpers/queries', () => {
     })
   })
 
-  describe('requestParamsToQuery(params)', () => {})
+  describe('requestParamsToQuery(params)', () => {
+    it('should have the correct keys', () => {
+      const keys = ['$and', '$or']
+      queriesHelper.requestParamsToQuery().should.have.all.keys(keys)
+    })
+
+    describe('when the term is present', () => {
+      it('should have the correct property', () => {
+        const params = {
+          term: 'lorem ipsum'
+        }
+
+        const result = queriesHelper.requestParamsToQuery(params)
+
+        result['$and'][0].should.have.property('normalizedComment')
+        result['$and'][1].should.have.property('normalizedComment')
+      })
+    })
+
+    describe('when the categories is present', () => {
+      it('should have the correct property', () => {
+        const params = {
+          categories: 'client,technology,content'
+        }
+
+        const result = queriesHelper.requestParamsToQuery(params)
+
+        expect(result['$or'][0]['category']).to.equals('client')
+        expect(result['$or'][1]['category']).to.equals('technology')
+        expect(result['$or'][2]['category']).to.equals('content')
+      })
+    })
+  })
 })

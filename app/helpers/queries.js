@@ -73,7 +73,7 @@ module.exports = {
   },
 
   requestParamsToQuery(params) {
-    const { term, categories, start_date: startDate, end_date: endDate } = params
+    const { term, categories, start_date: startDate, end_date: endDate } = params || {}
 
     const $and = [...this.termToQuery(term), ...this.rangeToQuery(startDate, endDate)]
     const $or = [...this.categoriesToQuery(categories)]
