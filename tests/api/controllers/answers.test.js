@@ -19,6 +19,21 @@ describe('app/controllers/answers', () => {
       .reply(200, [])
   })
 
+  describe('get /answers', () => {
+    it('should return 200 with no correct properties', done => {
+      const keys = ['total', 'answers']
+
+      chai
+        .request(server)
+        .get('/answers')
+        .end((err, res) => {
+          res.should.have.status(200)
+          res.body.should.have.all.keys(keys)
+          done()
+        })
+    })
+  })
+
   describe('get /answers/force_update', () => {
     it('should return 204 with no body', done => {
       chai
@@ -40,6 +55,7 @@ describe('app/controllers/answers', () => {
         .request(server)
         .get('/answers/related_with')
         .end((err, res) => {
+          res.should.have.status(200)
           res.body.should.have.all.keys(keys)
           done()
         })

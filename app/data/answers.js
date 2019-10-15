@@ -1,4 +1,5 @@
 const answersHelper = require('../helpers/answers')
+const queriesHelper = require('../helpers/queries')
 
 const COLLECTION_NAME = 'answers'
 
@@ -15,10 +16,42 @@ module.exports = {
     })
   },
 
+  getIndexCount({ db, query }) {
+    return new Promise((resolve, reject) => {
+      db.collection(COLLECTION_NAME).countDocuments(query, (err, count) => {
+        if (err) {
+          return reject(err)
+        }
+
+        return resolve(count)
+      })
+    })
+  },
+
+  getIndex({ db, query, sort, skip }) {
+    return new Promise((resolve, reject) => {
+      db.collection(COLLECTION_NAME)
+        .find(query)
+        .project({ _id: 0, normalizedComment: 0 })
+        .collation({ locale: 'pt' })
+        .sort(sort)
+        .skip(skip)
+        .limit(10)
+        .toArray((err, docs) => {
+          if (err) {
+            return reject(err)
+          }
+
+          return resolve(docs)
+        })
+    })
+  },
+
   getAll(db) {
     return new Promise((resolve, reject) => {
       db.collection(COLLECTION_NAME)
         .find({})
+        .project({ _id: 0, normalizedComment: 0 })
         .toArray((err, docs) => {
           if (err) {
             return reject(err)
@@ -70,13 +103,14 @@ module.exports = {
   },
 
   getRelated(db, term) {
-    const query = [...answersHelper.termToQuery(term), { normalizedComment: { $ne: null } }]
+    const query = [...queriesHelper.termToQuery(term), { normalizedComment: { $ne: null } }]
 
     return new Promise((resolve, reject) => {
       db.collection(COLLECTION_NAME)
         .find({
           $and: query
         })
+        .project({ _id: 0, normalizedComment: 0 })
         .toArray((err, answers) => {
           if (err) {
             return reject(err)
