@@ -31,4 +31,17 @@ to run tests, just execute this following command on the root path `docker-compo
 
 ## how to build?
 
-to build an image, use the `Dockerfile.prod` with the `.env` file.
+to build an image, follow the next steps:
+
+1. config the `.env` file like the development mode
+2. run the following command to build the image:
+
+```sh
+$ docker build -f Dockerfile.prod -t d3_growth_backend:1.0.0 .
+```
+
+3. then, you can start the container:
+
+```sh
+$ docker run -it -p 3000:3000 --name d3_growth_backend d3_growth_backend:1.0.0
+```
