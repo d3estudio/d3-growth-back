@@ -1,5 +1,11 @@
 .dockerignore
+.env.sample
 .git/
 .gitignore
+docker-compose.yml
 Dockerfile
+Dockerfile.dev
 node_modules
+README.md
+tests
+yarn.lock
