@@ -1,6 +1,6 @@
 {
   "name": "d3-growth-back",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "a new experiment to growth process",
   "main": "index.js",
   "repository": "https://github.com/d3estudio/d3-growth-back",

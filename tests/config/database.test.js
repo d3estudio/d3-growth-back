@@ -2,16 +2,17 @@ const chai = require('chai'),
   expect = chai.expect,
   should = chai.should()
 
-const database = require('../../app/config/database')
+const Database = require('../../app/config/Database')
 
 const { MONGO_DB, MONGO_HOST, MONGO_PORT } = process.env
 const uriRegex = new RegExp(`mongodb\:\/\/(${MONGO_HOST})\:(${MONGO_PORT})\/(${MONGO_DB})`)
 
 let db
+const databaseInstance = new Database()
 
 describe('app/config/database', () => {
   before(done => {
-    database
+    databaseInstance
       .connect()
       .then(instance => {
         db = instance
@@ -22,7 +23,7 @@ describe('app/config/database', () => {
 
   after(done => {
     db.dropDatabase({}, (err, result) => {
-      database.closeConnection()
+      databaseInstance.closeConnection()
 
       if (err) {
         done(err)
@@ -34,8 +35,8 @@ describe('app/config/database', () => {
 
   describe('connect()', () => {
     it('should provide the connected client', () => {
-      database.client.should.be.an('object')
-      database.client['topology']['s']['connected'].should.be.true
+      databaseInstance.client.should.be.an('object')
+      databaseInstance.client['topology']['s']['connected'].should.be.true
     })
 
     it('should return the correct database', () => {
@@ -49,7 +50,7 @@ describe('app/config/database', () => {
 
   describe('uri()', () => {
     it('should have correct config', () => {
-      uriRegex.test(database.uri()).should.be.true
+      uriRegex.test(databaseInstance.uri()).should.be.true
     })
   })
 })
