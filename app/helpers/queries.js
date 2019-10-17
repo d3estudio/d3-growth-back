@@ -5,21 +5,25 @@ const answersHelper = require('./answers')
 module.exports = {
   termToQuery(term) {
     const normalizedTerm = answersHelper.normalizeAnswerString(term)
+    const defaultQuery = [{ comment: { $ne: null } }]
 
     if (!normalizedTerm) {
-      return []
+      return defaultQuery
     }
 
-    return (`${normalizedTerm}`.trim().split(' ') || []).map(item => {
-      return {
-        normalizedComment: new RegExp(item)
-      }
-    })
+    return (`${normalizedTerm}`.trim().split(' ') || []).reduce((prev, current) => {
+      return [
+        ...prev,
+        {
+          normalizedComment: new RegExp(current)
+        }
+      ]
+    }, defaultQuery)
   },
 
   categoriesToQuery(categories) {
     if (!categories) {
-      return [{}]
+      return []
     }
 
     return `${categories}`
@@ -33,15 +37,17 @@ module.exports = {
   },
 
   rangeToQuery(startDate, endDate) {
-    const start = moment(startDate || '1970-01-01')
+    const $gte = moment(startDate || '1970-01-01')
       .startOf('day')
-      .toISOString()
+      .add(3, 'hours')
+      .toDate()
 
-    const end = moment(endDate)
+    const $lte = moment(endDate)
       .endOf('day')
-      .toISOString()
+      .add(3, 'hours')
+      .toDate()
 
-    return [{ date: { $gte: new Date(start) } }, { date: { $lte: new Date(end) } }]
+    return [{ date: { $gte } }, { date: { $lte } }]
   },
 
   sortByToQuery(sortBy, direction) {
@@ -78,9 +84,15 @@ module.exports = {
     const $and = [...this.termToQuery(term), ...this.rangeToQuery(startDate, endDate)]
     const $or = [...this.categoriesToQuery(categories)]
 
-    return {
-      $and,
-      $or
+    const query = { $and }
+
+    if ($or.length) {
+      return {
+        ...query,
+        $or
+      }
     }
+
+    return query
   }
 }
