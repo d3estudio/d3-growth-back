@@ -1,3 +1,5 @@
+const moment = require('moment')
+
 const answersHelper = require('../helpers/answers')
 const queriesHelper = require('../helpers/queries')
 
@@ -64,8 +66,11 @@ module.exports = {
 
   getNps(db) {
     return new Promise((resolve, reject) => {
+      const today = moment().format('YYYY-MM-DD')
+      const $match = { $and: queriesHelper.rangeToQuery(today, today) }
+
       db.collection(COLLECTION_NAME)
-        .aggregate([{ $group: { _id: '$type', count: { $sum: 1 } } }])
+        .aggregate([{ $match }, { $group: { _id: '$type', count: { $sum: 1 } } }])
         .toArray((err, doc) => {
           if (err) {
             return reject(err)
