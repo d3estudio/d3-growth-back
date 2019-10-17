@@ -70,8 +70,12 @@ describe('app/helpers/queries', () => {
       })
 
       it('should return default query', () => {
-        const expectedStart = moment('1970-01-01').startOf('day')
-        const expectedEnd = moment().endOf('day')
+        const expectedStart = moment('1970-01-01')
+          .startOf('day')
+          .add(3, 'hours')
+        const expectedEnd = moment()
+          .endOf('day')
+          .add(3, 'hours')
 
         expect(moment(result[0]['date']['$gte']).isSame(expectedStart)).to.be.true
         expect(moment(result[1]['date']['$lte']).isSame(expectedEnd)).to.be.true
@@ -90,8 +94,8 @@ describe('app/helpers/queries', () => {
       })
 
       it('should return correct query', () => {
-        const expectedStart = start.startOf('day')
-        const expectedEnd = end.endOf('day')
+        const expectedStart = start.startOf('day').add(3, 'hours')
+        const expectedEnd = end.endOf('day').add(3, 'hours')
 
         expect(moment(result[0]['date']['$gte']).isSame(expectedStart)).to.be.true
         expect(moment(result[1]['date']['$lte']).isSame(expectedEnd)).to.be.true

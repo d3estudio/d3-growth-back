@@ -37,15 +37,17 @@ module.exports = {
   },
 
   rangeToQuery(startDate, endDate) {
-    const start = moment(startDate || '1970-01-01')
+    const $gte = moment(startDate || '1970-01-01')
       .startOf('day')
-      .toISOString()
+      .add(3, 'hours')
+      .toDate()
 
-    const end = moment(endDate)
+    const $lte = moment(endDate)
       .endOf('day')
-      .toISOString()
+      .add(3, 'hours')
+      .toDate()
 
-    return [{ date: { $gte: new Date(start) } }, { date: { $lte: new Date(end) } }]
+    return [{ date: { $gte } }, { date: { $lte } }]
   },
 
   sortByToQuery(sortBy, direction) {
