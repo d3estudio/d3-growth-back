@@ -5,7 +5,7 @@ const answersHelper = require('./answers')
 module.exports = {
   termToQuery(term) {
     const normalizedTerm = answersHelper.normalizeAnswerString(term)
-    const defaultQuery = [{ normalizedComment: { $ne: null } }]
+    const defaultQuery = [{ comment: { $ne: null } }]
 
     if (!normalizedTerm) {
       return defaultQuery
@@ -23,7 +23,7 @@ module.exports = {
 
   categoriesToQuery(categories) {
     if (!categories) {
-      return [{}]
+      return []
     }
 
     return `${categories}`
@@ -82,9 +82,15 @@ module.exports = {
     const $and = [...this.termToQuery(term), ...this.rangeToQuery(startDate, endDate)]
     const $or = [...this.categoriesToQuery(categories)]
 
-    return {
-      $and,
-      $or
+    const query = { $and }
+
+    if ($or.length) {
+      return {
+        ...query,
+        $or
+      }
     }
+
+    return query
   }
 }

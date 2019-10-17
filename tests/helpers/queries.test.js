@@ -14,8 +14,8 @@ describe('app/helpers/queries', () => {
 
       queriesHelper.termToQuery(term).should.have.length(2)
 
-      queriesHelper.termToQuery(term)[0].should.have.property('normalizedComment')
-      queriesHelper.termToQuery(term)[0]['normalizedComment'].should.have.property('$ne')
+      queriesHelper.termToQuery(term)[0].should.have.property('comment')
+      queriesHelper.termToQuery(term)[0]['comment'].should.have.property('$ne')
 
       queriesHelper.termToQuery(term)[1].should.have.property('normalizedComment')
       queriesHelper.termToQuery(term)[1]['normalizedComment'].test('abc').should.be.true
@@ -26,8 +26,8 @@ describe('app/helpers/queries', () => {
 
       queriesHelper.termToQuery(term).should.have.length(4)
 
-      queriesHelper.termToQuery(term)[0].should.have.property('normalizedComment')
-      queriesHelper.termToQuery(term)[0]['normalizedComment'].should.have.property('$ne')
+      queriesHelper.termToQuery(term)[0].should.have.property('comment')
+      queriesHelper.termToQuery(term)[0]['comment'].should.have.property('$ne')
 
       queriesHelper.termToQuery(term)[1].should.have.property('normalizedComment')
       queriesHelper.termToQuery(term)[1]['normalizedComment'].test('a').should.be.true
@@ -42,9 +42,7 @@ describe('app/helpers/queries', () => {
         const result = queriesHelper.categoriesToQuery()
 
         result.should.be.an('array')
-        result.should.have.lengthOf(1)
-
-        result[0].should.be.empty
+        result.should.be.empty
       })
     })
 
@@ -164,9 +162,14 @@ describe('app/helpers/queries', () => {
   })
 
   describe('requestParamsToQuery(params)', () => {
-    it('should have the correct keys', () => {
-      const keys = ['$and', '$or']
-      queriesHelper.requestParamsToQuery().should.have.all.keys(keys)
+    it('should have the correct properties', () => {
+      const and = '$and'
+      const or = '$or'
+
+      const result = queriesHelper.requestParamsToQuery()
+
+      result.should.have.property(and)
+      result.should.not.have.property(or)
     })
 
     describe('when the term is present', () => {
@@ -177,18 +180,22 @@ describe('app/helpers/queries', () => {
 
         const result = queriesHelper.requestParamsToQuery(params)
 
-        result['$and'][0].should.have.property('normalizedComment')
+        result['$and'][0].should.have.property('comment')
         result['$and'][1].should.have.property('normalizedComment')
+        result['$and'][2].should.have.property('normalizedComment')
       })
     })
 
     describe('when the categories is present', () => {
-      it('should have the correct property', () => {
+      it('should have the correct keys', () => {
+        const keys = ['$and', '$or']
         const params = {
           categories: 'client,technology,content'
         }
 
         const result = queriesHelper.requestParamsToQuery(params)
+
+        result.should.have.all.keys(keys)
 
         expect(result['$or'][0]['category']).to.equals('client')
         expect(result['$or'][1]['category']).to.equals('technology')
