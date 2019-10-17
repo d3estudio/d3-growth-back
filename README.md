@@ -37,11 +37,11 @@ to build an image, follow the next steps:
 2. run the following command to build the image:
 
 ```sh
-$ docker build -f Dockerfile.prod -t d3_growth_backend:1.0.0 .
+$ docker build -f Dockerfile.prod -t d3_growth_backend:1.0.1 .
 ```
 
 3. then, you can start the container:
 
 ```sh
-$ docker run -it -p 3000:3000 --name d3_growth_backend d3_growth_backend:1.0.0
+$ docker run -it -p 3000:3000 --name d3_growth_backend d3_growth_backend:1.0.1
 ```
