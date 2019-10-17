@@ -103,13 +103,11 @@ module.exports = {
   },
 
   getRelated(db, term) {
-    const query = [...queriesHelper.termToQuery(term), { normalizedComment: { $ne: null } }]
+    const $and = queriesHelper.termToQuery(term)
 
     return new Promise((resolve, reject) => {
       db.collection(COLLECTION_NAME)
-        .find({
-          $and: query
-        })
+        .find({ $and })
         .project({ _id: 0, normalizedComment: 0 })
         .toArray((err, answers) => {
           if (err) {

@@ -5,16 +5,20 @@ const answersHelper = require('./answers')
 module.exports = {
   termToQuery(term) {
     const normalizedTerm = answersHelper.normalizeAnswerString(term)
+    const defaultQuery = [{ normalizedComment: { $ne: null } }]
 
     if (!normalizedTerm) {
-      return []
+      return defaultQuery
     }
 
-    return (`${normalizedTerm}`.trim().split(' ') || []).map(item => {
-      return {
-        normalizedComment: new RegExp(item)
-      }
-    })
+    return (`${normalizedTerm}`.trim().split(' ') || []).reduce((prev, current) => {
+      return [
+        ...prev,
+        {
+          normalizedComment: new RegExp(current)
+        }
+      ]
+    }, defaultQuery)
   },
 
   categoriesToQuery(categories) {

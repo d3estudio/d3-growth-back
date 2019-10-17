@@ -12,21 +12,27 @@ describe('app/helpers/queries', () => {
     it('should return correct query for term "abc"', () => {
       const term = 'abc'
 
-      queriesHelper.termToQuery(term).should.have.length(1)
+      queriesHelper.termToQuery(term).should.have.length(2)
+
       queriesHelper.termToQuery(term)[0].should.have.property('normalizedComment')
-      queriesHelper.termToQuery(term)[0]['normalizedComment'].test('abc').should.be.true
+      queriesHelper.termToQuery(term)[0]['normalizedComment'].should.have.property('$ne')
+
+      queriesHelper.termToQuery(term)[1].should.have.property('normalizedComment')
+      queriesHelper.termToQuery(term)[1]['normalizedComment'].test('abc').should.be.true
     })
 
     it('should return correct query for term "abc"', () => {
       const term = 'a b c'
 
-      queriesHelper.termToQuery(term).should.have.length(3)
+      queriesHelper.termToQuery(term).should.have.length(4)
 
       queriesHelper.termToQuery(term)[0].should.have.property('normalizedComment')
+      queriesHelper.termToQuery(term)[0]['normalizedComment'].should.have.property('$ne')
 
-      queriesHelper.termToQuery(term)[0]['normalizedComment'].test('a').should.be.true
-      queriesHelper.termToQuery(term)[1]['normalizedComment'].test('a').should.be.false
+      queriesHelper.termToQuery(term)[1].should.have.property('normalizedComment')
+      queriesHelper.termToQuery(term)[1]['normalizedComment'].test('a').should.be.true
       queriesHelper.termToQuery(term)[2]['normalizedComment'].test('a').should.be.false
+      queriesHelper.termToQuery(term)[3]['normalizedComment'].test('a').should.be.false
     })
   })
 
