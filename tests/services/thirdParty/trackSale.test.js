@@ -6,7 +6,7 @@ const chai = require('chai'),
 const moment = require('moment')
 const nock = require('nock')
 
-const database = require('../../../app/config/database')
+const Database = require('../../../app/config/Database')
 const trackSaleService = require('../../../app/services/thirdParty/trackSale')
 const mock = require('../../mocks/trackSaleService.mock')
 
@@ -15,10 +15,11 @@ const url = 'https://api.tracksale.co/v2'
 const uriRegex = /\/report\/answer\?codes=(.*)\&start=(\d{4}-\d{2}-\d{2})\&limit=-1/
 
 let db
+const databaseInstance = new Database()
 
 describe('app/services/thirdParty/trackSale', () => {
   before(done => {
-    database
+    databaseInstance
       .connect()
       .then(instance => {
         db = instance
@@ -29,7 +30,7 @@ describe('app/services/thirdParty/trackSale', () => {
 
   after(done => {
     db.dropDatabase({}, (err, result) => {
-      database.closeConnection()
+      databaseInstance.closeConnection()
 
       if (err) {
         done(err)
@@ -192,18 +193,6 @@ describe('app/services/thirdParty/trackSale', () => {
           done()
         })
         .catch(err => done(err))
-    })
-
-    after(done => {
-      db.dropDatabase({}, (err, result) => {
-        database.closeConnection()
-
-        if (err) {
-          done(err)
-        } else {
-          done()
-        }
-      })
     })
   })
 })

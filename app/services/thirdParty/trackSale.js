@@ -1,7 +1,7 @@
 const moment = require('moment')
 
 const answersData = require('../../data/answers')
-const database = require('../../config/database')
+const Database = require('../../config/Database')
 const proxy = require('../../config/proxy')
 const answerService = require('../answer')
 
@@ -63,8 +63,10 @@ module.exports = {
   updateDatabase() {
     let db, ids
 
+    const databaseInstance = new Database()
+
     return new Promise((resolve, reject) => {
-      database
+      databaseInstance
         .connect()
         .then(instance => {
           db = instance
@@ -79,11 +81,11 @@ module.exports = {
           return toInsert.length ? answersData.insertMany(db, toInsert) : Promise.resolve([])
         })
         .then(result => {
-          database.closeConnection()
+          databaseInstance.closeConnection()
           return resolve(result)
         })
         .catch(err => {
-          database.closeConnection()
+          databaseInstance.closeConnection()
           return reject(err)
         })
     })

@@ -1,5 +1,5 @@
 const answersData = require('../data/answers')
-const database = require('../config/database')
+const Database = require('../config/Database')
 const queriesHelper = require('../helpers/queries')
 const trackSaleService = require('../services/thirdParty/trackSale')
 
@@ -9,7 +9,9 @@ module.exports = {
     const { query: params } = req
     const query = queriesHelper.requestParamsToQuery(params)
 
-    database
+    const databaseInstance = new Database()
+
+    databaseInstance
       .connect()
       .then(instance => {
         db = instance
@@ -25,11 +27,11 @@ module.exports = {
         return answersData.getIndex({ db, query, sort, skip })
       })
       .then(answers => {
-        database.closeConnection()
+        databaseInstance.closeConnection()
         return res.send({ total, answers })
       })
       .catch(err => {
-        database.closeConnection()
+        databaseInstance.closeConnection()
         return res.status(422).send(err)
       })
   },
@@ -48,17 +50,19 @@ module.exports = {
   relatedWith(req, res) {
     const { subject } = req.query
 
-    database
+    const databaseInstance = new Database()
+
+    databaseInstance
       .connect()
       .then(db => {
         return answersData.getRelated(db, subject)
       })
       .then(result => {
-        database.closeConnection()
+        databaseInstance.closeConnection()
         return res.send(result)
       })
       .catch(err => {
-        database.closeConnection()
+        databaseInstance.closeConnection()
         return res.status(422).send(err)
       })
   }

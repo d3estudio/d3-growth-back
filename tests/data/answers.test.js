@@ -6,16 +6,17 @@ const chai = require('chai'),
 const chaiHttp = require('chai-http')
 
 const answersData = require('../../app/data/answers')
-const database = require('../../app/config/database')
+const Database = require('../../app/config/Database')
 const mock = require('../mocks/answersData.mock')
 
 chai.use(chaiHttp)
 
 let db
+const databaseInstance = new Database()
 
 describe('app/data/answers', () => {
   before(done => {
-    database
+    databaseInstance
       .connect()
       .then(instance => {
         db = instance
@@ -28,7 +29,7 @@ describe('app/data/answers', () => {
 
   after(done => {
     db.dropDatabase({}, (err, result) => {
-      database.closeConnection()
+      databaseInstance.closeConnection()
 
       if (err) {
         done(err)

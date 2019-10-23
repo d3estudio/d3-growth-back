@@ -3,7 +3,7 @@ const mongoUri = require('mongodb-uri')
 
 const { MONGO_DB, MONGO_HOST, MONGO_PORT } = process.env
 
-module.exports = {
+class Database {
   connect() {
     return new Promise((resolve, reject) => {
       client.connect(
@@ -19,11 +19,11 @@ module.exports = {
         }
       )
     })
-  },
+  }
 
   closeConnection() {
     this.client && this.client.close()
-  },
+  }
 
   uri() {
     return mongoUri.format({
@@ -37,3 +37,5 @@ module.exports = {
     })
   }
 }
+
+module.exports = Database
