@@ -7,6 +7,7 @@ const nock = require('nock')
 
 const server = require('../../../server')
 
+const { TOKEN_SECRET } = process.env
 const url = 'https://api.tracksale.co/v2'
 const uriRegex = /\/report\/answer\?codes=(.*)\&start=(\d{4}-\d{2}-\d{2})\&limit=-1/
 
@@ -26,6 +27,7 @@ describe('app/controllers/answers', () => {
       chai
         .request(server)
         .get('/answers')
+        .set('Authorization', `Bearer ${TOKEN_SECRET}`)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.have.all.keys(keys)
@@ -39,6 +41,7 @@ describe('app/controllers/answers', () => {
       chai
         .request(server)
         .get('/answers/force_update')
+        .set('Authorization', `Bearer ${TOKEN_SECRET}`)
         .end((err, res) => {
           res.should.have.status(204)
           res.body.should.be.empty
@@ -54,6 +57,7 @@ describe('app/controllers/answers', () => {
       chai
         .request(server)
         .get('/answers/related_with')
+        .set('Authorization', `Bearer ${TOKEN_SECRET}`)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.have.all.keys(keys)
