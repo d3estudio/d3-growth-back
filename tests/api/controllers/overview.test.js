@@ -5,6 +5,8 @@ const chaiHttp = require('chai-http')
 
 const server = require('../../../server')
 
+const { TOKEN_SECRET } = process.env
+
 chai.use(chaiHttp)
 
 describe('app/controllers/overview', () => {
@@ -15,6 +17,7 @@ describe('app/controllers/overview', () => {
       chai
         .request(server)
         .get('/overview/nps_report')
+        .set('Authorization', `Bearer ${TOKEN_SECRET}`)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.have.all.keys(keys)
@@ -28,6 +31,7 @@ describe('app/controllers/overview', () => {
       chai
         .request(server)
         .get('/overview/summary')
+        .set('Authorization', `Bearer ${TOKEN_SECRET}`)
         .end((err, res) => {
           res.should.have.status(200)
           res.body.should.have.property('summary')
